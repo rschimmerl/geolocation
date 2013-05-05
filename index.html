@@ -34,7 +34,7 @@
         if (act_lon == 0 || act_lat == 0) {
           getPosition();
         }
-        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&amp;zoom=14&amp;size=288x200&amp;sensor=true";
+        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&zoom=14&size=288x200&sensor=false";
         $("#gMap").attr('src', url);
       });
     });
