@@ -15,24 +15,34 @@
         </script>
         <script src="my.js">
         </script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
         <!-- User-generated css -->
         <style>
         </style>
         <!-- User-generated js -->
-        <script>
+        <script type="text/javascript" charset="utf-8">
+         var act_log = 0;
+         var act_lat = 0;
+         
             try {
 
     $(function() {
-
+      
+     $( "#coll_maps" ).bind( "expand", function(event, ui) {
+        
+        if (act_lon == 0 || act_lat == 0) {
+          getPosition();
+        }
+        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&amp;zoom=14&amp;size=288x200&amp;sensor=true";
+        $("#gMap").attr('src', url);
+      });
     });
 
   } catch (error) {
     console.error("Your javascript has an error: " + error);
   }
-        </script>
-         <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
-    <script type="text/javascript" charset="utf-8">
+       
 
     // Wait for Cordova to load
     //
@@ -48,6 +58,9 @@
     //
     function onSuccess(position) {
         var element = document.getElementById('geolocation');
+        act_lon = position.coords.longitude;
+        act_lat =  position.coords.latitude;
+        
         element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
                             'Longitude: '          + position.coords.longitude             + '<br />' +
                             'Altitude: '           + position.coords.altitude              + '<br />' +
@@ -78,6 +91,8 @@
     //
     function onSuccessWatch(position) {
         var element = document.getElementById('geolocationWatch');
+        act_lon = position.coords.longitude;
+        act_lat =  position.coords.latitude;
         element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
                             'Longitude: ' + position.coords.longitude     + '<br />' +
                             '<hr />'      + element.innerHTML;
@@ -133,11 +148,11 @@
                          </a>
                         </p>
                     </div>
-                    <div data-role="collapsible" data-collapsed="true">
+                    <div id="coll_maps" data-role="collapsible" data-collapsed="true">
                         <h3>
                             Maps
                         </h3>
-                        <img src="https://maps.googleapis.com/maps/api/staticmap?center=Madison, WI&amp;zoom=14&amp;size=288x200&amp;markers=Madison, WI&amp;sensor=false" height="200" width="288" />
+                        <img id="gMap" src="https://maps.googleapis.com/maps/api/staticmap?center=Madison, WI&amp;zoom=14&amp;size=288x200&amp;markers=Madison, WI&amp;sensor=false" height="200" width="288" />
                     </div>
                 </div>
             </div>
