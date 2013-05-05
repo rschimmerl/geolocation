@@ -4,6 +4,7 @@
     <title>Device Properties Example</title>
 
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
     <script type="text/javascript" charset="utf-8">
 
     // Wait for Cordova to load
@@ -40,10 +41,44 @@
    function getPosition() {
       navigator.geolocation.getCurrentPosition(onSuccess, onError);
    }
+   
+   function watchPosition() {
+      var options = { enableHighAccuracy: true };
+      watchID = navigator.geolocation.watchPosition(onSuccessWatch, onErrorWatch, options);
+   }
+   
+    // onSuccess Geolocation
+    //
+    function onSuccessWatch(position) {
+        var element = document.getElementById('geolocationWatch');
+        element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
+                            'Longitude: ' + position.coords.longitude     + '<br />' +
+                            '<hr />'      + element.innerHTML;
+    }
+
+    // clear the watch that was started earlier
+    // 
+    function clearWatch() {
+        if (watchID != null) {
+            navigator.geolocation.clearWatch(watchID);
+            watchID = null;
+        }
+    }
+    
+     // onError Callback receives a PositionError object
+    //
+    function onErrorWatch(error) {
+      alert('code: '    + error.code    + '\n' +
+            'message: ' + error.message + '\n');
+    }
     </script>
   </head>
   <body>
+   <h1>Geolocation Test</h1>
     <p id="geolocation">Finding geolocation...</p>
     <button onclick="getPosition()">Los</button>
+    <p id="geolocationWatch">Finding geolocation...</p>
+    <button onclick="watchPosition()">&Auml;nderungen verfolgen</button>
+    <button onclick="clearWatch();">Clear Watch</button>   
   </body>
 </html>
