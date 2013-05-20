@@ -16,13 +16,13 @@
         <script src="my.js">
         </script>
         <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+         <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
         <!-- User-generated css -->
         <style>
         </style>
         <!-- User-generated js -->
         <script type="text/javascript" charset="utf-8">
-         var act_log = 0;
+         var act_lon = 0;
          var act_lat = 0;
          
             try {
@@ -34,7 +34,8 @@
         if (act_lon == 0 || act_lat == 0) {
           getPosition();
         }
-        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=16&size=288x200&sensor=false";
+        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=18&size=500x400&sensor=true&maptype=satellite";
+        console.log(url);
         $("#gMap").attr('src', url);
       });
     });
@@ -79,7 +80,7 @@
     }
    
    function getPosition() {
-      navigator.geolocation.getCurrentPosition(onSuccess, onError);
+      navigator.geolocation.getCurrentPosition(onSuccess, onError, { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true } );
    }
    
    function watchPosition() {
@@ -96,6 +97,9 @@
         element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
                             'Longitude: ' + position.coords.longitude     + '<br />' +
                             '<hr />'      + element.innerHTML;
+          url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=18&size=500x400&sensor=true&maptype=satellite";
+        console.log(url);
+        $("#gMap").attr('src', url);
     }
 
     // clear the watch that was started earlier
@@ -152,7 +156,7 @@
                         <h3>
                             Maps
                         </h3>
-                        <img id="gMap" src="https://maps.googleapis.com/maps/api/staticmap?center=Madison, WI&amp;zoom=14&amp;size=288x200&amp;markers=Madison, WI&amp;sensor=false" height="200" width="288" />
+                        <img id="gMap" src="https://maps.googleapis.com/maps/api/staticmap?center=47.784303,13.062945&amp;zoom=17&amp;size=500x400&amp;markers=47.784303,13.062945&amp;sensor=true" width="500" />
                     </div>
                 </div>
             </div>
