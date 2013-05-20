@@ -25,24 +25,28 @@
          var act_lon = 0;
          var act_lat = 0;
          
-            try {
+         var startpunkt;
+         
+         var points = new Array();
+         
+         try {
 
-    $(function() {
-      
-     $( "#coll_maps" ).bind( "expand", function(event, ui) {
-        
-        if (act_lon == 0 || act_lat == 0) {
-          getPosition();
-        }
-        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=18&size=500x400&sensor=true&maptype=satellite";
-        console.log(url);
-        $("#gMap").attr('src', url);
-      });
-    });
+            $(function() {
 
-  } catch (error) {
-    console.error("Your javascript has an error: " + error);
-  }
+            $( "#coll_maps" ).bind( "expand", function(event, ui) {
+
+                  if (act_lon == 0 || act_lat == 0) {
+                     getPosition();
+                  }
+                  url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=500x400&sensor=true&maptype=satellite";
+                  console.log(url);
+                  $("#gMap").attr('src', url);
+               });
+            });
+
+         } catch (error) {
+            console.error("Your javascript has an error: " + error);
+         }
        
 
     // Wait for Cordova to load
@@ -61,7 +65,10 @@
         var element = document.getElementById('geolocation');
         act_lon = position.coords.longitude;
         act_lat =  position.coords.latitude;
-        
+         if ( ! startpunkt ) {
+            startpunkt = position.coords;
+         }
+         
         element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
                             'Longitude: '          + position.coords.longitude             + '<br />' +
                             'Altitude: '           + position.coords.altitude              + '<br />' +
@@ -95,13 +102,59 @@
         act_lon = position.coords.longitude;
         act_lat =  position.coords.latitude;
         element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
-                            'Longitude: ' + position.coords.longitude     + '<br />' +
-                            '<hr />'      + element.innerHTML;
-          url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=18&size=500x400&sensor=true&maptype=satellite";
-        console.log(url);
+                            'Longitude: ' + position.coords.longitude     + '<br />';
+        points.push(position.coords);
+         if ( ! startpunkt ) {
+            startpunkt = position.coords;
+         }
+        /*
+        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=500x400&sensor=true&maptype=satellite";
+        //console.log(url);
         $("#gMap").attr('src', url);
-    }
+        */
+      zeichneWeg();
+   }
+   
+   
+   function zeichneWeg() {
+      var canvas = document.getElementById('karte');
+      var ctx = canvas.getContext('2d');
 
+      ctx.fillStyle = '#79B9EA';
+      ctx.strokeStyle = '#000';
+      ctx.fillRect(0,0,500,300);
+      ctx.lineWidth  = 3;
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.moveTo(250,150); //Ausgangspunkt...
+      
+      for( i=0; i < points.length; i++ ) {
+         console.log(points[i]);
+         drawPoint(ctx, points[i]);
+      }
+      
+      
+      ctx.closePath();
+      ctx.stroke();
+   }
+   
+   var faktor = 10;
+   
+   function drawPoint(ctx, point) {
+      console.log(startpunkt);
+      var x = point.latitude - startpunkt.latitude;
+      var y = point.longitude - startpunkt.longitude;
+      
+      console.log( x + ":" + y);
+      
+      xpos = 250 + (x * faktor);
+      ypos = 150 + (y * faktor);
+      ctx.lineTo(xpos,ypos);
+      
+   }
+   
     // clear the watch that was started earlier
     // 
     function clearWatch() {
@@ -150,6 +203,9 @@
                          <a data-role="button" onclick="clearWatch()">
                              Clear Watch
                          </a>
+                         <canvas id="karte" width="500" height="300">
+                         
+                         </canvas>
                         </p>
                     </div>
                     <div id="coll_maps" data-role="collapsible" data-collapsed="true">
