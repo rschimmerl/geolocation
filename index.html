@@ -26,8 +26,8 @@
          var act_lat = 0;
          
          var startpunkt ;
-         
          var points = new Array( );
+         //var points = new Array( { latitude: 47.7853, longitude: 13.062812 } ,  { latitude: 47.7859, longitude: 13.062924 }  );
          
          try {
 
@@ -91,7 +91,7 @@
    }
    
    function watchPosition() {
-      var options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 500 };
+      var options = { enableHighAccuracy: true };
       watchID = navigator.geolocation.watchPosition(onSuccessWatch, onErrorWatch, options);
    }
    
@@ -128,7 +128,8 @@
       
       ctx.fillStyle = '#000';
       //ctx.beginPath();
-      ctx.moveTo(250,150); //Ausgangspunkt...
+      ctx.translate(250,150);
+      ctx.moveTo(0,0); //Ausgangspunkt...
       
       for( i=0; i < points.length; i++ ) {
          console.log(points[i]);
@@ -139,7 +140,7 @@
       //ctx.closePath();
    }
    
-   var faktor = 10000;
+   var faktor = 50000;
    
    function drawPoint(ctx, point) {
       console.log( "Startpunkt: " + startpunkt.latitude + ":" + startpunkt.longitude);
@@ -149,9 +150,10 @@
       
       console.log( x + ":" + y);
       
-      xpos = 250 + (x * faktor);
-      ypos = 150 + (y * faktor);
+      xpos = Math.round(x * faktor);
+      ypos = Math.round(y * faktor);
       console.log( xpos + "::" + ypos );
+      $("#points").html( $("#points").html() + '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos)  ;
       ctx.lineTo(xpos,ypos);
       ctx.stroke();
       ctx.moveTo(xpos,ypos);
@@ -205,6 +207,7 @@
                          <a data-role="button" onclick="clearWatch()">
                              Clear Watch
                          </a>
+                         <p id="points">Startpunkt...</p>
                          <canvas id="karte" width="500" height="300">
                          
                          </canvas>
