@@ -25,7 +25,8 @@
          var act_lon = 0;
          var act_lat = 0;
          
-         var startpunkt ;
+         var startpunkt;
+         //var startpunkt =  { latitude: 47.7853, longitude: 13.062812 } ;
          var points = new Array( );
          //var points = new Array( { latitude: 47.7853, longitude: 13.062812 } ,  { latitude: 47.7859, longitude: 13.062924 }  );
          
@@ -33,7 +34,7 @@
 
             $(function() {
 
-            $( "#coll_maps" ).bind( "expand", function(event, ui) {
+               $( "#coll_maps" ).bind( "expand", function(event, ui) {
 
                   if (act_lon == 0 || act_lat == 0) {
                      getPosition();
@@ -42,138 +43,146 @@
                   console.log(url);
                   $("#gMap").attr('src', url);
                });
-            });
+               
+               canvas = document.getElementById('karte');
+               ctx = canvas.getContext('2d');
 
+            
+            });
+            
+            
+            
          } catch (error) {
             console.error("Your javascript has an error: " + error);
          }
        
 
-    // Wait for Cordova to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
+          // Wait for Cordova to load
+          //
+          document.addEventListener("deviceready", onDeviceReady, false);
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    }
+          // Cordova is ready
+          //
+          function onDeviceReady() {
+              navigator.geolocation.getCurrentPosition(onSuccess, onError);
+          }
 
-    // onSuccess Geolocation
-    //
-    function onSuccess(position) {
-        var element = document.getElementById('geolocation');
-        act_lon = position.coords.longitude;
-        act_lat =  position.coords.latitude;
-         if ( ! startpunkt ) {
-            startpunkt = position.coords;
+          // onSuccess Geolocation
+          //
+          function onSuccess(position) {
+              var element = document.getElementById('geolocation');
+              act_lon = position.coords.longitude;
+              act_lat =  position.coords.latitude;
+               if ( ! startpunkt ) {
+                  startpunkt = position.coords;
+               }
+               
+              element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
+                                  'Longitude: '          + position.coords.longitude             + '<br />' +
+                                  'Altitude: '           + position.coords.altitude              + '<br />' +
+                                  'Accuracy: '           + position.coords.accuracy              + '<br />' +
+                                  'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
+                                  'Heading: '            + position.coords.heading               + '<br />' +
+                                  'Speed: '              + position.coords.speed                 + '<br />' +
+                                  'Timestamp: '          +                                   position.timestamp          + '<br />';
+          }
+
+          // onError Callback receives a PositionError object
+          //
+          function onError(error) {
+              alert('code: '    + error.code    + '\n' +
+                      'message: ' + error.message + '\n');
+          }
+         
+         function getPosition() {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError );
          }
          
-        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
-                            'Longitude: '          + position.coords.longitude             + '<br />' +
-                            'Altitude: '           + position.coords.altitude              + '<br />' +
-                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
-                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-                            'Heading: '            + position.coords.heading               + '<br />' +
-                            'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          +                                   position.timestamp          + '<br />';
-    }
-
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-    }
-   
-   function getPosition() {
-      navigator.geolocation.getCurrentPosition(onSuccess, onError );
-   }
-   
-   function watchPosition() {
-      var options = { enableHighAccuracy: true };
-      watchID = navigator.geolocation.watchPosition(onSuccessWatch, onErrorWatch, options);
-   }
-   
-    // onSuccess Geolocation
-    //
-    function onSuccessWatch(position) {
-        var element = document.getElementById('geolocationWatch');
-        act_lon = position.coords.longitude;
-        act_lat =  position.coords.latitude;
-        element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
-                            'Longitude: ' + position.coords.longitude     + '<br />';
-        points.push(position.coords);
-         if ( ! startpunkt ) {
-            startpunkt = position.coords;
+         function watchPosition() {
+            var options = { enableHighAccuracy: true };
+            watchID = navigator.geolocation.watchPosition(onSuccessWatch, onErrorWatch, options);
          }
-        /* */
-        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=380x250&sensor=true&maptype=satellite";
-        //console.log(url);
-        $("#gMap").attr('src', url);
-        
-      zeichneWeg();
-   }
+         
+          // onSuccess Geolocation
+          //
+          function onSuccessWatch(position) {
+              var element = document.getElementById('geolocationWatch');
+              act_lon = position.coords.longitude;
+              act_lat =  position.coords.latitude;
+              element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
+                                  'Longitude: ' + position.coords.longitude     + '<br />';
+              points.push(position.coords);
+              drawPoint( position.coords);
+               if ( ! startpunkt ) {
+                  startpunkt = position.coords;
+               }
+              /* */
+              url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=380x250&sensor=true&maptype=satellite";
+              //console.log(url);
+              $("#gMap").attr('src', url);
+              
+            zeichneWeg();
+         }
    
    
-   function zeichneWeg() {
-      var canvas = document.getElementById('karte');
-      var ctx = canvas.getContext('2d');
+         function zeichneWeg() {
+            
 
-      ctx.fillStyle = '#79B9EA';
-      ctx.strokeStyle = '#000';
-      ctx.fillRect(0,0,500,300);
-      ctx.lineWidth  = 3;
-      ctx.fill();
-      
-      ctx.fillStyle = '#000';
-      //ctx.beginPath();
-      ctx.translate(250,150);
-      ctx.moveTo(0,0); //Ausgangspunkt...
-      
-      for( i=0; i < points.length; i++ ) {
-         console.log(points[i]);
-         drawPoint(ctx, points[i]);
-      }
-      
-      
-      //ctx.closePath();
-   }
-   
-   var faktor = 50000;
-   
-   function drawPoint(ctx, point) {
-      console.log( "Startpunkt: " + startpunkt.latitude + ":" + startpunkt.longitude);
-      console.log ( "Punkt" + point.latitude + ':' + point.longitude);  
-      var x = point.latitude - startpunkt.latitude;
-      var y = point.longitude - startpunkt.longitude;
-      
-      console.log( x + ":" + y);
-      
-      xpos = Math.round(x * faktor);
-      ypos = Math.round(y * faktor);
-      console.log( xpos + "::" + ypos );
-      $("#points").html( $("#points").html() + '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos)  ;
-      ctx.lineTo(xpos,ypos);
-      ctx.stroke();
-      ctx.moveTo(xpos,ypos);
-   }
-   
-    // clear the watch that was started earlier
-    // 
-    function clearWatch() {
-        if (watchID != null) {
-            navigator.geolocation.clearWatch(watchID);
-            watchID = null;
-        }
-    }
-    
-     // onError Callback receives a PositionError object
-    //
-    function onErrorWatch(error) {
-      alert('code: '    + error.code    + '\n' +
-            'message: ' + error.message + '\n');
-    }
+            ctx.fillStyle = '#79B9EA';
+            ctx.strokeStyle = '#000';
+            ctx.fillRect(0,0,350,250);
+            ctx.lineWidth  = 3;
+            ctx.fill();
+            
+            ctx.fillStyle = '#000';
+            //ctx.beginPath();
+            ctx.translate(175,125);
+            ctx.moveTo(0,0); //Ausgangspunkt...
+            
+            for( i=0; i < points.length; i++ ) {
+               //console.log(points[i]);
+               drawPoint( points[i]);
+            }
+            
+            
+            //ctx.closePath();
+         }
+         
+         var faktor = 100000;
+         
+         function drawPoint(point) {
+            //console.log( "Startpunkt: " + startpunkt.latitude + ":" + startpunkt.longitude);
+            //console.log ( "Punkt" + point.latitude + ':' + point.longitude);  
+            var x = point.latitude - startpunkt.latitude;
+            var y = point.longitude - startpunkt.longitude;
+            
+            //console.log( x + ":" + y);
+            
+            xpos = Math.round(x * faktor);
+            ypos = Math.round(y * faktor);
+            console.log( xpos + "::" + ypos );
+            $("#points").append( '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos)  ;
+            ctx.lineTo(xpos,ypos);
+            ctx.stroke();
+            ctx.moveTo(xpos,ypos);
+         }
+         
+          // clear the watch that was started earlier
+          // 
+          function clearWatch() {
+              if (watchID != null) {
+                  navigator.geolocation.clearWatch(watchID);
+                  watchID = null;
+              }
+          }
+          
+           // onError Callback receives a PositionError object
+          //
+          function onErrorWatch(error) {
+            alert('code: '    + error.code    + '\n' +
+                  'message: ' + error.message + '\n');
+          }
+          
     </script>
     </head>
     <body>
@@ -208,9 +217,7 @@
                              Clear Watch
                          </a>
                          <p id="points">Startpunkt...</p>
-                         <canvas id="karte" width="500" height="300">
-                         
-                         </canvas>
+                         <canvas id="karte" width="350" height="250"></canvas>
                         </p>
                     </div>
                     <div id="coll_maps" data-role="collapsible" data-collapsed="true">
