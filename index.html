@@ -38,7 +38,7 @@
                   if (act_lon == 0 || act_lat == 0) {
                      getPosition();
                   }
-                  url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=500x400&sensor=true&maptype=satellite";
+                  url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=380x250&sensor=true&maptype=satellite";
                   console.log(url);
                   $("#gMap").attr('src', url);
                });
@@ -107,11 +107,11 @@
          if ( ! startpunkt ) {
             startpunkt = position.coords;
          }
-        /*
-        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=500x400&sensor=true&maptype=satellite";
+        /* */
+        url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=380x250&sensor=true&maptype=satellite";
         //console.log(url);
         $("#gMap").attr('src', url);
-        */
+        
       zeichneWeg();
    }
    
@@ -214,7 +214,7 @@
                         <h3>
                             Maps
                         </h3>
-                        <img id="gMap" src="https://maps.googleapis.com/maps/api/staticmap?center=47.784303,13.062945&amp;zoom=17&amp;size=500x400&amp;markers=47.784303,13.062945&amp;sensor=true" width="380" />
+                        <img id="gMap" src="https://maps.googleapis.com/maps/api/staticmap?center=47.784303,13.062945&amp;zoom=17&amp;size=380x250&amp;markers=47.784303,13.062945&amp;sensor=true" width="380" />
                     </div>
                 </div>
             </div>
