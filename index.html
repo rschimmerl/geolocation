@@ -87,11 +87,11 @@
     }
    
    function getPosition() {
-      navigator.geolocation.getCurrentPosition(onSuccess, onError, { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true } );
+      navigator.geolocation.getCurrentPosition(onSuccess, onError );
    }
    
    function watchPosition() {
-      var options = { enableHighAccuracy: true };
+      var options = { enableHighAccuracy: true, timeout: 500 };
       watchID = navigator.geolocation.watchPosition(onSuccessWatch, onErrorWatch, options);
    }
    
