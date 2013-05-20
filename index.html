@@ -25,9 +25,9 @@
          var act_lon = 0;
          var act_lat = 0;
          
-         var startpunkt;
+         var startpunkt ;
          
-         var points = new Array();
+         var points = new Array( );
          
          try {
 
@@ -127,7 +127,7 @@
       ctx.fill();
       
       ctx.fillStyle = '#000';
-      ctx.beginPath();
+      //ctx.beginPath();
       ctx.moveTo(250,150); //Ausgangspunkt...
       
       for( i=0; i < points.length; i++ ) {
@@ -136,14 +136,14 @@
       }
       
       
-      ctx.closePath();
-      ctx.stroke();
+      //ctx.closePath();
    }
    
-   var faktor = 10;
+   var faktor = 10000;
    
    function drawPoint(ctx, point) {
-      console.log(startpunkt);
+      console.log( "Startpunkt: " + startpunkt.latitude + ":" + startpunkt.longitude);
+      console.log ( "Punkt" + point.latitude + ':' + point.longitude);  
       var x = point.latitude - startpunkt.latitude;
       var y = point.longitude - startpunkt.longitude;
       
@@ -151,8 +151,10 @@
       
       xpos = 250 + (x * faktor);
       ypos = 150 + (y * faktor);
+      console.log( xpos + "::" + ypos );
       ctx.lineTo(xpos,ypos);
-      
+      ctx.stroke();
+      ctx.moveTo(xpos,ypos);
    }
    
     // clear the watch that was started earlier
