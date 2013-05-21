@@ -112,13 +112,13 @@
             
             ctx.fillStyle = '#79B9EA';
             ctx.strokeStyle = '#000';
-            ctx.fillRect(0,0,350,250);
+            ctx.fillRect(0,0,320,320);
             ctx.lineWidth  = 3;
             ctx.fill();
             
             ctx.fillStyle = '#000';
             //ctx.beginPath();
-            ctx.translate(175,125);
+            ctx.translate(160,160);
             ctx.moveTo(0,0); //Ausgangspunkt...
             
             for( i=0; i < points.length; i++ ) {
@@ -129,7 +129,7 @@
             //ctx.closePath();
          }
          
-         var faktor = 100000;
+         var faktor = 200000;
          
          function drawPoint(point) {
             //console.log( "Startpunkt: " + startpunkt.latitude + ":" + startpunkt.longitude);
@@ -141,8 +141,8 @@
             
             xpos = Math.round(x * faktor);
             ypos = Math.round(y * faktor);
-            console.log( xpos + "::" + ypos );
-            $("#points").append( '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos + " DiffX:" + x + ' DiffY:' + y)  ;
+            //console.log( xpos + "::" + ypos );
+            //$("#points").append( '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos + " DiffX:" + x + ' DiffY:' + y)  ;
             ctx.lineTo(xpos,ypos);
             ctx.stroke();
             ctx.moveTo(xpos,ypos);
@@ -179,7 +179,7 @@
                <h3>
                    Lokalisierung
                </h3>
-               <canvas id="karte" width="350" height="250"></canvas>
+               <canvas id="karte" width="320" height="320"></canvas>
                <p id="points">Startpunkt...</p>
                
                <p id="geolocation">Finding geolocation...</p>
