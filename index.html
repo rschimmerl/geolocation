@@ -112,13 +112,13 @@
             
             ctx.fillStyle = '#79B9EA';
             ctx.strokeStyle = '#000';
-            ctx.fillRect(0,0,320,320);
+            ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.lineWidth  = 3;
             ctx.fill();
             
             ctx.fillStyle = '#000';
             //ctx.beginPath();
-            ctx.translate(160,160);
+            ctx.translate(canvas.width/2,canvas.height/2);
             ctx.moveTo(0,0); //Ausgangspunkt...
             
             for( i=0; i < points.length; i++ ) {
@@ -179,7 +179,7 @@
                <h3>
                    Lokalisierung
                </h3>
-               <canvas id="karte" width="320" height="320"></canvas>
+               <canvas id="karte" width="300" height="300"></canvas>
                <p id="points">Startpunkt...</p>
                
                <p id="geolocation">Finding geolocation...</p>
