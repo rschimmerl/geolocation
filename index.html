@@ -32,21 +32,10 @@
          
          try {
 
-            $(function() {
-
-               $( "#coll_maps" ).bind( "expand", function(event, ui) {
-
-                  if (act_lon == 0 || act_lat == 0) {
-                     getPosition();
-                  }
-                  url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=380x250&sensor=true&maptype=satellite";
-                  console.log(url);
-                  $("#gMap").attr('src', url);
-               });
-               
+            $(function() {               
                canvas = document.getElementById('karte');
                ctx = canvas.getContext('2d');
-
+               zeichneWeg();
             
             });
             
@@ -105,29 +94,22 @@
          
           // onSuccess Geolocation
           //
-          function onSuccessWatch(position) {
-              var element = document.getElementById('geolocationWatch');
-              act_lon = position.coords.longitude;
-              act_lat =  position.coords.latitude;
-              element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
-                                  'Longitude: ' + position.coords.longitude     + '<br />';
-              points.push(position.coords);
-              drawPoint( position.coords);
-               if ( ! startpunkt ) {
-                  startpunkt = position.coords;
-               }
-              /* */
-              url = "https://maps.googleapis.com/maps/api/staticmap?center=" + act_lat + "," + act_lon + "&markers=label:P|" + act_lat + "," + act_lon + "&zoom=22&size=380x250&sensor=true&maptype=satellite";
-              //console.log(url);
-              $("#gMap").attr('src', url);
-              
-            zeichneWeg();
+         function onSuccessWatch(position) {
+           var element = document.getElementById('geolocationWatch');
+           act_lon = position.coords.longitude;
+           act_lat =  position.coords.latitude;
+           element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
+                               'Longitude: ' + position.coords.longitude     + '<br />';
+           points.push(position.coords);
+           drawPoint( position.coords);
+            if ( ! startpunkt ) {
+               startpunkt = position.coords;
+            }
          }
    
    
          function zeichneWeg() {
             
-
             ctx.fillStyle = '#79B9EA';
             ctx.strokeStyle = '#000';
             ctx.fillRect(0,0,350,250);
@@ -143,7 +125,6 @@
                //console.log(points[i]);
                drawPoint( points[i]);
             }
-            
             
             //ctx.closePath();
          }
@@ -161,7 +142,7 @@
             xpos = Math.round(x * faktor);
             ypos = Math.round(y * faktor);
             console.log( xpos + "::" + ypos );
-            $("#points").append( '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos)  ;
+            $("#points").append( '<br />'  + "Neuer Punkt: " + xpos + ':' +  ypos + " DiffX:" + x + ' DiffY:' + y)  ;
             ctx.lineTo(xpos,ypos);
             ctx.stroke();
             ctx.moveTo(xpos,ypos);
@@ -194,39 +175,25 @@
                 </h3>
             </div>
             <div data-role="content">
-                <div data-role="collapsible-set">
-                    <div data-role="collapsible" data-collapsed="true">
-                        <h3>
-                            Hilfe
-                        </h3>
-                    </div>
-                    <div data-role="collapsible" data-collapsed="false">
-                        <h3>
-                            Lokalisierung
-                        </h3>
-                        <p>
-                        <p id="geolocation">Finding geolocation...</p>
-                        <a data-role="button" onclick="getPosition()">
-                             Finde Position
-                         </a>
-                         <p id="geolocationWatch">Finding geolocation...</p>
-                         <a data-role="button" onclick="watchPosition()">
-                             &Auml;nderungen verfolgen
-                         </a>
-                         <a data-role="button" onclick="clearWatch()">
-                             Clear Watch
-                         </a>
-                         <p id="points">Startpunkt...</p>
-                         <canvas id="karte" width="350" height="250"></canvas>
-                        </p>
-                    </div>
-                    <div id="coll_maps" data-role="collapsible" data-collapsed="true">
-                        <h3>
-                            Maps
-                        </h3>
-                        <img id="gMap" src="https://maps.googleapis.com/maps/api/staticmap?center=47.784303,13.062945&amp;zoom=17&amp;size=380x250&amp;markers=47.784303,13.062945&amp;sensor=true" width="380" />
-                    </div>
-                </div>
+
+               <h3>
+                   Lokalisierung
+               </h3>
+               <canvas id="karte" width="350" height="250"></canvas>
+               <p id="points">Startpunkt...</p>
+               
+               <p id="geolocation">Finding geolocation...</p>
+               <a data-role="button" onclick="getPosition()">
+                    Finde Position
+                </a>
+                <p id="geolocationWatch">Finding geolocation...</p>
+                <a data-role="button" onclick="watchPosition()">
+                    &Auml;nderungen verfolgen
+                </a>
+                <a data-role="button" onclick="clearWatch()">
+                    Clear Watch
+                </a>
+                
             </div>
         </div>
     </body>
